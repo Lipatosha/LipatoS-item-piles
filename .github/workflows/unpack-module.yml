@@ -1,0 +1,27 @@
+name: Unpack Item Piles module
+
+on:
+  push:
+    paths:
+      - 'lipatos-item-piles-v3.3.4-rub-fix46.zip'
+
+permissions:
+  contents: write
+
+jobs:
+  unpack:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Unpack module
+        shell: bash
+        run: |
+          unzip -o lipatos-item-piles-v3.3.4-rub-fix46.zip
+          git add LICENSE module.json dist languages icons templates
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Распаковать рабочую сборку модуля"
+          git push
