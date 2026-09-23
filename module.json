@@ -2,7 +2,7 @@
   "id": "item-piles",
   "title": "LipatoS - Item Piles",
   "description": "Расширенная сборка Item Piles для Foundry VTT: стопки предметов, контейнеры, хранилища, торговцы, обмен между игроками и работа с валютой с русским интерфейсом и доработанным отображением монет.",
-  "version": "3.3.4-rub-fix46",
+  "version": "3.3.4-rub-fix47",
   "library": false,
   "compatibility": {
     "minimum": "14",
@@ -26,30 +26,99 @@
     "dist/item-piles.css"
   ],
   "languages": [
-    { "lang": "en", "name": "English", "path": "languages/en.json" },
-    { "lang": "de", "name": "Deutsch", "path": "languages/de.json" },
-    { "lang": "fr", "name": "Français", "path": "languages/fr.json" },
-    { "lang": "ja", "name": "日本語", "path": "languages/ja.json" },
-    { "lang": "ko", "name": "한국어", "path": "languages/ko.json" },
-    { "lang": "pt-BR", "name": "Português (Brasil)", "path": "languages/pt-BR.json" },
-    { "lang": "pl", "name": "polski", "path": "languages/pl.json" },
-    { "lang": "es", "name": "Español", "path": "languages/es.json" },
-    { "lang": "zh-Hans", "name": "中文（简体）", "path": "languages/zh_Hans.json" },
-    { "lang": "cs", "name": "Čeština", "path": "languages/cs.json" },
-    { "lang": "it", "name": "Italiano", "path": "languages/it.json" },
-    { "lang": "ru", "name": "Русский", "path": "languages/ru.json" },
-    { "lang": "zh-Hant", "name": "漢語（正體字）", "path": "languages/zh_Hant.json" }
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    },
+    {
+      "lang": "de",
+      "name": "Deutsch",
+      "path": "languages/de.json"
+    },
+    {
+      "lang": "fr",
+      "name": "Français",
+      "path": "languages/fr.json"
+    },
+    {
+      "lang": "ja",
+      "name": "日本語",
+      "path": "languages/ja.json"
+    },
+    {
+      "lang": "ko",
+      "name": "한국어",
+      "path": "languages/ko.json"
+    },
+    {
+      "lang": "pt-BR",
+      "name": "Português (Brasil)",
+      "path": "languages/pt-BR.json"
+    },
+    {
+      "lang": "pl",
+      "name": "polski",
+      "path": "languages/pl.json"
+    },
+    {
+      "lang": "es",
+      "name": "Español",
+      "path": "languages/es.json"
+    },
+    {
+      "lang": "zh-Hans",
+      "name": "中文（简体）",
+      "path": "languages/zh_Hans.json"
+    },
+    {
+      "lang": "cs",
+      "name": "Čeština",
+      "path": "languages/cs.json"
+    },
+    {
+      "lang": "it",
+      "name": "Italiano",
+      "path": "languages/it.json"
+    },
+    {
+      "lang": "ru",
+      "name": "Русский",
+      "path": "languages/ru.json"
+    },
+    {
+      "lang": "zh-Hant",
+      "name": "漢語（正體字）",
+      "path": "languages/zh_Hant.json"
+    }
   ],
   "relationships": {
     "requires": [
-      { "id": "socketlib", "type": "module" },
-      { "id": "lib-wrapper", "type": "module" }
+      {
+        "id": "socketlib",
+        "type": "module"
+      },
+      {
+        "id": "lib-wrapper",
+        "type": "module"
+      }
+    ],
+    "recommends": [
+      {
+        "id": "itempilesdnd5e",
+        "type": "module",
+        "manifest": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles-dnd5e/main/module.json",
+        "compatibility": {
+          "minimum": "1.1.0",
+          "verified": "1.1.0"
+        }
+      }
     ]
   },
   "socket": true,
   "url": "https://github.com/Lipatosha/LipatoS-item-piles",
   "manifest": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/module.json",
-  "download": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/lipatos-item-piles-v3.3.4-rub-fix46.zip",
+  "download": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/lipatos-item-piles-v3.3.4-rub-fix47.zip",
   "readme": "https://github.com/Lipatosha/LipatoS-item-piles/blob/main/README.md",
   "bugs": "https://github.com/Lipatosha/LipatoS-item-piles/issues"
 }
