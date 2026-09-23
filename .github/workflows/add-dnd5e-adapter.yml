@@ -3,7 +3,7 @@ name: Add D&D5e adapter recommendation
 on:
   push:
     paths:
-      - '.adapter-ready'
+      - '.adapter-ready2'
 
 permissions:
   contents: write
@@ -25,17 +25,14 @@ jobs:
 
           p = Path("module.json")
           d = json.loads(p.read_text(encoding="utf-8"))
-          old = d["version"]
-          new = "3.3.4-rub-fix47"
-          d["version"] = new
+          d["version"] = "3.3.4-rub-fix47"
           rel = d.setdefault("relationships", {})
-          rec = rel.setdefault("recommends", [])
-          rec = [x for x in rec if x.get("id") != "itempilesdnd5e"]
+          rec = [x for x in rel.setdefault("recommends", []) if x.get("id") != "itempilesdnd5e"]
           rec.append({
-            "id": "itempilesdnd5e",
-            "type": "module",
-            "manifest": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles-dnd5e/main/module.json",
-            "compatibility": {"minimum": "1.1.0", "verified": "1.1.0"}
+              "id": "itempilesdnd5e",
+              "type": "module",
+              "manifest": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles-dnd5e/main/module.json",
+              "compatibility": {"minimum": "1.1.0", "verified": "1.1.0"}
           })
           rel["recommends"] = rec
           d["download"] = "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/lipatos-item-piles-v3.3.4-rub-fix47.zip"
@@ -44,26 +41,16 @@ jobs:
           rp = Path("README.md")
           t = rp.read_text(encoding="utf-8")
           t = t.replace("**3.3.4-rub-fix46**", "**3.3.4-rub-fix47**", 1)
-          t = t.replace("сохраняет все исправления и изменения рабочей сборки `3.3.4-rub-fix46`.",
-                        "сохраняет все исправления и изменения рабочей сборки `3.3.4-rub-fix47`.")
+          t = t.replace("сохраняет все исправления и изменения рабочей сборки `3.3.4-rub-fix46`.", "сохраняет все исправления и изменения рабочей сборки `3.3.4-rub-fix47`.")
           marker = "- **libWrapper**."
-          addition = """- **libWrapper**.
-
-Для мира **D&D 5e** также рекомендуется **LipatoS - Item Piles: D&D 5e**. Foundry сможет предложить его установку автоматически. Адаптер добавляет системную интеграцию валюты, цен, контейнеров и предметов D&D5e."""
+          addition = "- **libWrapper**.\n\nДля мира **D&D 5e** также рекомендуется **LipatoS - Item Piles: D&D 5e**. Foundry сможет предложить его установку автоматически. Адаптер добавляет системную интеграцию валюты, цен, контейнеров и предметов D&D5e."
           if "LipatoS - Item Piles: D&D 5e" not in t:
               t = t.replace(marker, addition)
           rp.write_text(t, encoding="utf-8")
 
           cp = Path("CHANGELOG.md")
           t = cp.read_text(encoding="utf-8")
-          entry = """## 3.3.4-rub-fix47
-
-- Добавлена рекомендация модуля **LipatoS - Item Piles: D&D 5e** для миров D&D5e.
-- Адаптер подключён через `relationships.recommends`, чтобы Foundry предлагал его установку без циклической обязательной зависимости.
-- Ссылка на адаптер направлена на репозиторий LipatoS.
-- Обновлён установочный архив основной сборки.
-
-"""
+          entry = "## 3.3.4-rub-fix47\n\n- Добавлена рекомендация модуля **LipatoS - Item Piles: D&D 5e** для миров D&D5e.\n- Адаптер подключён через `relationships.recommends`, чтобы Foundry предлагал его установку без циклической обязательной зависимости.\n- Ссылка на адаптер направлена на репозиторий LipatoS.\n- Обновлён установочный архив основной сборки.\n\n"
           if "## 3.3.4-rub-fix47" not in t:
               first = t.find("\n")
               t = t[:first+1] + "\n" + entry + t[first+1:].lstrip("\n")
@@ -82,7 +69,7 @@ jobs:
         run: |
           set -euo pipefail
           git add -A
-          git rm --ignore-unmatch .adapter-ready .github/workflows/add-dnd5e-adapter.yml
+          git rm --ignore-unmatch .adapter-ready .adapter-ready2 .github/workflows/add-dnd5e-adapter.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Добавить адаптер Item Piles для D&D 5e"
