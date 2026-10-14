@@ -113,7 +113,7 @@ async function lipExOnSocket(data) {
 }
 
 function lipExCurrentActor(app) {
-  const recipient = app.recipient;
+  const recipient = app.svelte?.applicationShell?.store?.recipient || app.recipient;
   if (recipient && (game.user.isGM || recipient.testUserPermission(game.user, "OWNER"))) return recipient;
   return game.user.character || null;
 }
@@ -126,11 +126,15 @@ function lipExRefresh(state) {
     const node = state.pane.querySelector("[data-balance='" + code + "']");
     if (node) {
       const n = lipExActorCurrency(actor, code);
-      node.textContent = Number.isSafeInteger(n) ? n.toLocaleString("ru-RU") : "—";
+      const next = Number.isSafeInteger(n) ? n.toLocaleString("ru-RU") : "—";
+      if (node.textContent !== next) node.textContent = next;
     }
   }
   const who = state.pane.querySelector("[data-exchange-person]");
-  if (who) who.textContent = actor ? actor.name : "Персонаж не выбран";
+  if (who) {
+    const next = actor ? actor.name : "Персонаж не выбран";
+    if (who.textContent !== next) who.textContent = next;
+  }
   const from = state.pane.querySelector("[name='lip-ex-from']")?.value;
   const to = state.pane.querySelector("[name='lip-ex-to']")?.value;
   const quantity = state.pane.querySelector("[name='lip-ex-amount']")?.value;
@@ -144,10 +148,12 @@ function lipExRefresh(state) {
     if (!actor) reason = "Сначала выберите своего персонажа.";
     else if (lipExActorCurrency(actor, from) < Number(quantity)) reason = "Недостаточно монет.";
   } catch (error) { reason = error.message; }
-  preview.textContent = reason || ("Получите: " + received.toLocaleString("ru-RU") + " " + LIP_EX_NAMES[to].toLowerCase() + " (" + quantity + " " + LIP_EX_NAMES[from].toLowerCase() + " к обмену).");
+  const previewText = reason || ("Получите: " + received.toLocaleString("ru-RU") + " " + LIP_EX_NAMES[to].toLowerCase() + " (" + quantity + " " + LIP_EX_NAMES[from].toLowerCase() + " к обмену).");
+  if (preview.textContent !== previewText) preview.textContent = previewText;
   preview.classList.toggle("lip-ex-error", !!reason);
   button.disabled = !!reason || state.busy;
-  button.textContent = state.busy ? "Обмениваем…" : "Обменять монеты";
+  const caption = state.busy ? "Обмениваем…" : "Обменять монеты";
+  if (button.textContent !== caption) button.textContent = caption;
 }
 
 async function lipExSubmit(state) {
