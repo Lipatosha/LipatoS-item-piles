@@ -1,0 +1,99 @@
+/* LipatoS Item Piles — merchant currency exchange */
+.item-piles-config .lipatos-exchange-setting {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--color-border-light-primary, #7776);
+}
+.item-piles-config .lipatos-exchange-setting label {
+  flex: 3;
+  font-weight: 600;
+}
+.item-piles-config .lipatos-exchange-setting input[type="checkbox"] {
+  flex: none;
+  width: 18px;
+  height: 18px;
+  margin-right: 8px;
+}
+.item-piles-merchant-sheet nav.tabs .lipatos-exchange-tab {
+  padding: 0.45rem 0.7rem;
+  cursor: pointer;
+  white-space: nowrap;
+  user-select: none;
+}
+.item-piles-merchant-sheet .lipatos-exchange-panel {
+  display: none;
+  flex: 1 1 auto;
+  overflow: auto;
+  padding: 22px 26px;
+  color: var(--color-text-primary, inherit);
+}
+.item-piles-merchant-sheet.lipatos-exchange-open .item-pile-merchant-content {
+  display: none !important;
+}
+.item-piles-merchant-sheet.lipatos-exchange-open .lipatos-exchange-panel {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 18px;
+}
+.lipatos-exchange-panel h2 { margin: 0; font-size: 1.35rem; }
+.lipatos-exchange-panel h2 i { margin-right: 8px; }
+.lipatos-exchange-panel .lip-ex-who { margin: 0; }
+.lipatos-exchange-panel .lip-ex-balances {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(90px, 1fr));
+  gap: 14px;
+}
+.lipatos-exchange-panel .lip-ex-balances > div {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  gap: 5px;
+  padding: 14px 10px;
+  background: rgba(90, 75, 55, 0.14);
+  border: 1px solid var(--color-border-light-primary, #7776);
+  border-radius: 6px;
+}
+.lipatos-exchange-panel .lip-ex-balances strong { font-size: 1.3rem; }
+.lipatos-exchange-panel .lip-ex-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 14px;
+}
+.lipatos-exchange-panel .lip-ex-controls label {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-weight: 600;
+}
+.lipatos-exchange-panel .lip-ex-controls :is(select, input) {
+  width: 100%;
+  min-width: 0;
+  min-height: 32px;
+  box-sizing: border-box;
+  color: var(--color-text-primary, inherit);
+}
+.lipatos-exchange-panel .lip-ex-rate {
+  padding: 10px 12px;
+  border-radius: 5px;
+  background: rgba(120, 100, 70, .12);
+}
+.lipatos-exchange-panel .lip-ex-preview {
+  min-height: 1.7em;
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.lipatos-exchange-panel .lip-ex-preview.lip-ex-error { color: #d36565; }
+.lipatos-exchange-panel [data-exchange-confirm] {
+  align-self: flex-start;
+  min-height: 37px;
+  padding: 8px 22px;
+}
+@media (max-width: 650px) {
+  .lipatos-exchange-panel .lip-ex-controls { grid-template-columns: 1fr; }
+  .lipatos-exchange-panel .lip-ex-balances { gap: 5px; }
+}
