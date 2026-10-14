@@ -268,8 +268,9 @@ function lipExMountConfig(app) {
         ui.notifications.error("Не удалось сохранить настройку обмена валют: " + error.message));
     }, true);
   }
-  const merchantSettings = root.querySelector(".merchant-settings .setting-container");
-  if (!merchantSettings || merchantSettings.querySelector("[data-lipatos-exchange-setting]")) return;
+  const configTab = root.querySelector("section.tab-body > .tab");
+  const typeSelector = Array.from(configTab?.querySelectorAll("select") || []).find(el => Array.from(el.options).some(o => o.value === "merchant"));
+  if (!typeSelector || typeSelector.value !== "merchant" || configTab.querySelector("[data-lipatos-exchange-setting]")) return;
   const wrapper = document.createElement("div");
   wrapper.className = "form-group lipatos-exchange-setting";
   wrapper.dataset.lipatosExchangeSetting = "1";
@@ -282,7 +283,7 @@ function lipExMountConfig(app) {
   checkbox.checked = app._lipatosExchangePending ?? !!actor.getFlag(LIP_EX_MODULE, LIP_EX_FLAG);
   checkbox.addEventListener("change", () => { app._lipatosExchangePending = checkbox.checked; });
   wrapper.append(label, checkbox);
-  merchantSettings.prepend(wrapper);
+  typeSelector.closest(".form-group")?.after(wrapper);
 }
 
 function lipExEnhance(app) {
