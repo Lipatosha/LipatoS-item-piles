@@ -212,8 +212,15 @@ function lipExMakePane(state) {
 }
 
 function lipExMountMerchant(app) {
-  if (!lipExMerchant(app.merchant) || game.system.id !== "dnd5e") return;
   const root = lipExRoot(app);
+  if (!root) return;
+  if (!lipExMerchant(app.merchant) || game.system.id !== "dnd5e") {
+    root.classList.remove("lipatos-exchange-open");
+    root.querySelector(".lipatos-exchange-tab")?.remove();
+    root.querySelector(".lipatos-exchange-panel")?.remove();
+    lipExWindows.delete(app.id);
+    return;
+  }
   const nav = root?.querySelector("nav.tabs");
   const content = root?.querySelector(".item-pile-merchant-content");
   if (!nav || !content) return;
@@ -307,7 +314,8 @@ Hooks.on("closeApplication", app => {
 });
 Hooks.on("updateActor", actor => {
   for (const state of lipExWindows.values()) {
-    if (state.app.merchant?.uuid === actor.uuid || lipExCurrentActor(state.app)?.uuid === actor.uuid) lipExRefresh(state);
+    if (state.app.merchant?.uuid === actor.uuid) lipExMountMerchant(state.app);
+    else if (lipExCurrentActor(state.app)?.uuid === actor.uuid) lipExRefresh(state);
   }
 });
 // Svelte can mount/recreate settings tabs after renderApplication.
