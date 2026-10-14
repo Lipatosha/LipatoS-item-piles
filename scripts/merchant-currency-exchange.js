@@ -8,6 +8,22 @@ const LIP_EX_FLAG = "lipatosCurrencyExchangeEnabled";
 const LIP_EX_CHANNEL = "module.item-piles";
 const LIP_EX_DENOM = Object.freeze({ cp: 1, sp: 10, gp: 100 });
 const LIP_EX_NAMES = Object.freeze({ cp: "Медь", sp: "Серебро", gp: "Золото" });
+// Use the same custom coin art as the LipatoS character inventory.
+// Fall back to Item Piles icons when the three-currencies add-on is inactive.
+const LIP_EX_COIN_ART = Object.freeze({
+  cp: "modules/lipatos-three-currencies-global/assets/coins/copper-v2.webp",
+  sp: "modules/lipatos-three-currencies-global/assets/coins/silver.webp",
+  gp: "modules/lipatos-three-currencies-global/assets/coins/gold.webp"
+});
+const LIP_EX_COIN_FALLBACK = Object.freeze({
+  cp: "modules/item-piles/icons/trade-currency/copper.png",
+  sp: "modules/item-piles/icons/trade-currency/silver.png",
+  gp: "modules/item-piles/icons/trade-currency/gold.png"
+});
+function lipExCoinIcon(code) {
+  return game.modules.get("lipatos-three-currencies-global")?.active
+    ? LIP_EX_COIN_ART[code] : LIP_EX_COIN_FALLBACK[code];
+}
 const lipExWindows = new Map();
 const lipExPending = new Map();
 const lipExLocks = new Map();
@@ -194,19 +210,48 @@ async function lipExSubmit(state) {
 function lipExMakePane(state) {
   const pane = document.createElement("section");
   pane.className = "lipatos-exchange-panel";
-  pane.innerHTML = "<h2><i class='fas fa-coins'></i> Обмен монет</h2>" +
-    "<p class='lip-ex-who'>Кошелёк: <strong data-exchange-person></strong></p>" +
-    "<div class='lip-ex-balances'>" +
-    "<div><span>Медь</span><strong data-balance='cp'>—</strong></div>" +
-    "<div><span>Серебро</span><strong data-balance='sp'>—</strong></div>" +
-    "<div><span>Золото</span><strong data-balance='gp'>—</strong></div></div>" +
-    "<div class='lip-ex-controls'><label>Отдаёте<select name='lip-ex-from'><option value='cp'>Медь</option><option value='sp'>Серебро</option><option value='gp'>Золото</option></select></label>" +
-    "<label>Получаете<select name='lip-ex-to'><option value='sp'>Серебро</option><option value='cp'>Медь</option><option value='gp'>Золото</option></select></label>" +
-    "<label>Количество монет<input type='number' min='1' step='1' name='lip-ex-amount' value='10' inputmode='numeric'></label></div>" +
-    "<div class='lip-ex-rate'>Курс без комиссии: 100 медных = 10 серебряных = 1 золотая.</div>" +
-    "<p class='lip-ex-preview' data-exchange-preview></p>" +
-    "<button type='button' data-exchange-confirm>Обменять монеты</button>";
-  pane.querySelectorAll("input, select").forEach(el => el.addEventListener("input", () => lipExRefresh(state)));
+  const icon = code => lipExCoinIcon(code);
+  pane.innerHTML = `
+    <header class="lip-ex-heading">
+      <h2><i class="fas fa-coins"></i> Обмен монет</h2>
+      <span class="lip-ex-rate">Курс: 100 меди = 10 серебра = 1 золото</span>
+    </header>
+    <div class="lip-ex-who">Кошелёк: <strong data-exchange-person></strong></div>
+    <div class="lip-ex-balances">
+      <div class="lip-ex-balance">
+        <img src="${icon("cp")}" alt="Медь">
+        <span class="lip-ex-balance-text"><span>Медь</span><strong data-balance="cp">—</strong></span>
+      </div>
+      <div class="lip-ex-balance">
+        <img src="${icon("sp")}" alt="Серебро">
+        <span class="lip-ex-balance-text"><span>Серебро</span><strong data-balance="sp">—</strong></span>
+      </div>
+      <div class="lip-ex-balance">
+        <img src="${icon("gp")}" alt="Золото">
+        <span class="lip-ex-balance-text"><span>Золото</span><strong data-balance="gp">—</strong></span>
+      </div>
+    </div>
+    <div class="lip-ex-controls">
+      <label>Отдаёте<select name="lip-ex-from">
+        <option value="cp">Медь</option>
+        <option value="sp">Серебро</option>
+        <option value="gp">Золото</option>
+      </select></label>
+      <label>Получаете<select name="lip-ex-to">
+        <option value="sp">Серебро</option>
+        <option value="cp">Медь</option>
+        <option value="gp">Золото</option>
+      </select></label>
+      <label>Количество монет<input type="number" min="1" step="1" name="lip-ex-amount" value="10" inputmode="numeric"></label>
+    </div>
+    <div class="lip-ex-action">
+      <p class="lip-ex-preview" data-exchange-preview></p>
+      <button type="button" data-exchange-confirm>Обменять монеты</button>
+    </div>`;
+  pane.querySelectorAll("input, select").forEach(el => {
+    el.addEventListener("input", () => lipExRefresh(state));
+    el.addEventListener("change", () => lipExRefresh(state));
+  });
   pane.querySelector("[data-exchange-confirm]").addEventListener("click", () => lipExSubmit(state));
   return pane;
 }
@@ -295,8 +340,11 @@ function lipExMountConfig(app) {
 
 function lipExEnhance(app) {
   if (!app?.id) return;
-  if (app.id.startsWith("item-pile-config-")) lipExMountConfig(app);
-  if (app.id.startsWith("item-pile-merchant-")) lipExMountMerchant(app);
+  if (app.id.startsWith("item-pile-config-")) {
+    lipExMountConfig(app);
+  } else if (app.id.startsWith("item-pile-merchant-")) {
+    lipExMountMerchant(app);
+  }
 }
 
 Hooks.once("ready", () => {
