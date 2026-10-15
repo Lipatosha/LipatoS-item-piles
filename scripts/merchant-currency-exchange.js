@@ -134,6 +134,22 @@ function lipExCurrentActor(app) {
   return game.user.character || null;
 }
 
+function lipExUpdateReceiveOptions(pane) {
+  const give = pane?.querySelector("[name='lip-ex-from']");
+  const receive = pane?.querySelector("[name='lip-ex-to']");
+  if (!give || !receive) return;
+  const choices = Object.keys(LIP_EX_NAMES).filter(code => code !== give.value);
+  if (Array.from(receive.options).map(o => o.value).join("|") === choices.join("|")) return;
+  const previous = receive.value;
+  receive.replaceChildren(...choices.map(code => {
+    const option = document.createElement("option");
+    option.value = code;
+    option.textContent = LIP_EX_NAMES[code];
+    return option;
+  }));
+  receive.value = choices.includes(previous) ? previous : choices[0];
+}
+
 function lipExRefresh(state) {
   if (!state?.pane?.isConnected) return;
   const actor = lipExCurrentActor(state.app);
@@ -151,6 +167,7 @@ function lipExRefresh(state) {
     const next = actor ? actor.name : "Персонаж не выбран";
     if (who.textContent !== next) who.textContent = next;
   }
+  lipExUpdateReceiveOptions(state.pane);
   const from = state.pane.querySelector("[name='lip-ex-from']")?.value;
   const to = state.pane.querySelector("[name='lip-ex-to']")?.value;
   const quantity = state.pane.querySelector("[name='lip-ex-amount']")?.value;
@@ -256,6 +273,36 @@ function lipExMakePane(state) {
   return pane;
 }
 
+function lipExCurrencyCode(label) {
+  const text = String(label || "").trim().toLowerCase();
+  if (["медь", "copper", "cp"].includes(text)) return "cp";
+  if (["серебро", "silver", "sp"].includes(text)) return "sp";
+  if (["золото", "gold", "gp"].includes(text)) return "gp";
+  return null;
+}
+function lipExMerchantCoinIcons(app) {
+  const root = lipExRoot(app);
+  if (!root) return;
+  for (const entry of root.querySelectorAll(".item-pile-merchant-content .item-piles-currency-list [data-fast-tooltip]")) {
+    const img = entry.querySelector("img.item-piles-img");
+    const code = lipExCurrencyCode(entry.dataset.fastTooltip);
+    if (!img || !code) continue;
+    const newPath = lipExCoinIcon(code);
+    if (img.getAttribute("src") !== newPath) img.setAttribute("src", newPath);
+    img.classList.add("lipatos-merchant-coin-icon");
+    img.closest(".item-piles-img-container")?.classList.add("lipatos-merchant-coin-holder");
+  }
+  for (const img of root.querySelectorAll(".item-pile-merchant-content img[src*='/trade-currency/']")) {
+    const path = (img.getAttribute("src") || "").toLowerCase();
+    const code = path.includes("copper") ? "cp" : path.includes("silver") ? "sp" : path.includes("gold") ? "gp" : null;
+    if (!code) continue;
+    const newPath = lipExCoinIcon(code);
+    if (img.getAttribute("src") !== newPath) img.setAttribute("src", newPath);
+    img.classList.add("lipatos-merchant-coin-icon");
+    img.closest(".item-piles-img-container")?.classList.add("lipatos-merchant-coin-holder");
+  }
+}
+
 function lipExMountMerchant(app) {
   const root = lipExRoot(app);
   if (!root) return;
@@ -344,6 +391,7 @@ function lipExEnhance(app) {
     lipExMountConfig(app);
   } else if (app.id.startsWith("item-pile-merchant-")) {
     lipExMountMerchant(app);
+    lipExMerchantCoinIcons(app);
   }
 }
 
@@ -379,5 +427,5 @@ Hooks.once("ready", () => {
       if (records.some(record => root === record.target || root.contains(record.target))) lipExEnhance(app);
     }
   });
-  observer.observe(document.body, { childList: true, subtree: true });
+  observer.observe(document.body, { childList: true, subtree: true, attributes: true, attributeFilter: ["src"] });
 });
