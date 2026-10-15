@@ -266,3 +266,61 @@
 .item-piles-merchant-sheet .lipatos-merchant-coin-icon {
   object-fit: contain !important;
 }
+
+/* v3.3.7 — confirmation dialogs: currency icons from the player inventory. */
+.lipatos-trade-coin-holder {
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  overflow: visible !important;
+  padding: 0 !important;
+}
+.lipatos-trade-coin-icon {
+  width: 22px !important;
+  height: 22px !important;
+  max-width: 22px !important;
+  max-height: 22px !important;
+  border: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  object-fit: contain !important;
+  clip-path: inset(7% round 4px);
+}
+.lipatos-trade-summary > .lipatos-trade-original-receipt {
+  display: none !important;
+}
+/* In purchase the player receives the item; in sale the player gives it. */
+.lipatos-trade-summary > .lipatos-trade-item-receipt {
+  grid-column: 2;
+  grid-row: 2;
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  align-self: start;
+  justify-content: flex-end;
+  gap: 5px;
+  min-width: 0;
+  padding: 3px 5px;
+  text-align: right;
+  line-height: 1.3;
+}
+.lipatos-trade-item-receipt > .lipatos-trade-item-icon {
+  width: 24px !important;
+  height: 24px !important;
+  flex: 0 0 24px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+.lipatos-trade-item-receipt > .lipatos-trade-item-label {
+  font-weight: 600;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+.lipatos-trade-item-receipt > .lipatos-trade-item-count {
+  font-weight: 700;
+  white-space: nowrap;
+}
