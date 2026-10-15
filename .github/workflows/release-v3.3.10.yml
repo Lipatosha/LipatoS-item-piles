@@ -1,0 +1,41 @@
+name: Release LipatoS Item Piles v3.3.10
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/release-v3.3.10.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check compiled bundle and console regression
+        run: |
+          node --check dist/item-piles.js
+          node --check scripts/merchant-currency-exchange.js
+          node --check scripts/merchant-item-tooltips.js
+          node --check scripts/merchant-trade-dialog.js
+          node tests/console-warnings.cjs
+      - name: Package complete Item Piles module
+        run: |
+          zip -q -r lipatos-item-piles-v3.3.10.zip module.json dist scripts styles icons templates languages LICENSE README.md CHANGELOG.md
+          unzip -t lipatos-item-piles-v3.3.10.zip
+          unzip -l lipatos-item-piles-v3.3.10.zip | grep -F dist/item-piles.js
+      - name: Publish v3.3.10 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v3.3.10 >/dev/null 2>&1; then
+            gh release upload v3.3.10 lipatos-item-piles-v3.3.10.zip module.json --clobber
+          else
+            gh release create v3.3.10 lipatos-item-piles-v3.3.10.zip module.json \
+              --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
+              --title "LipatoS — Item Piles v3.3.10" \
+              --notes "Совместимость с Foundry v14: исправлен deprecated Tour и 404 от отсутствующей source map."
+          fi

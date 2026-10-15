@@ -2,7 +2,7 @@
   "id": "item-piles",
   "title": "LipatoS - Item Piles",
   "description": "Расширенная сборка Item Piles для Foundry VTT: стопки предметов, контейнеры, хранилища, торговцы, обмен между игроками и работа с валютой с русским интерфейсом и доработанным отображением монет. Добавлен обмен медных, серебряных и золотых монет у торговцев (по выбору мастера).",
-  "version": "3.3.9",
+  "version": "3.3.10",
   "library": false,
   "compatibility": {
     "minimum": "14",
@@ -122,7 +122,7 @@
   "socket": true,
   "url": "https://github.com/Lipatosha/LipatoS-item-piles",
   "manifest": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/module.json",
-  "download": "https://raw.githubusercontent.com/Lipatosha/LipatoS-item-piles/main/lipatos-item-piles-v3.3.9.zip",
+  "download": "https://github.com/Lipatosha/LipatoS-item-piles/releases/download/v3.3.10/lipatos-item-piles-v3.3.10.zip",
   "readme": "https://github.com/Lipatosha/LipatoS-item-piles/blob/main/README.md",
   "bugs": "https://github.com/Lipatosha/LipatoS-item-piles/issues"
 }

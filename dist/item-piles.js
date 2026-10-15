@@ -100408,7 +100408,7 @@ class FastTooltipManager extends (foundry?.helpers?.interaction?.TooltipManager?
    * @param {PointerEvent} event    The initiating pointerenter event
    */
   #onActivate(event) {
-    if (Tour.tourInProgress) return;
+    if (foundry.nue.Tour.tourInProgress) return;
     const element2 = event.target;
     if (!element2.dataset.fastTooltip) {
       if (this.#active && this.element && !this.element.contains(element2)) this.#startDeactivation();
@@ -100991,7 +100991,7 @@ async function displayChatMessage() {
 `
   });
 }
-//# sourceMappingURL=item-piles.js.map
+
 
 
 /* RUBAIKO FIX21 runtime trade enhancer */
