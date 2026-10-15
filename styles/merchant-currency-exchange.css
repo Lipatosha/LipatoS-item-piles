@@ -298,20 +298,22 @@
   grid-column: 2;
   grid-row: 2;
   display: flex !important;
-  flex-wrap: wrap;
-  align-items: center;
-  align-self: start;
-  justify-content: flex-end;
+  flex-wrap: nowrap;
+  align-items: center !important;
+  align-self: stretch !important;
+  justify-content: flex-start !important;
+  align-content: center !important;
   gap: 5px;
   min-width: 0;
-  padding: 3px 5px;
-  text-align: right;
+  box-sizing: border-box;
+  padding: 3px 7px;
+  text-align: left !important;
   line-height: 1.3;
 }
 .lipatos-trade-item-receipt > .lipatos-trade-item-icon {
-  width: 24px !important;
-  height: 24px !important;
-  flex: 0 0 24px;
+  width: 22px !important;
+  height: 22px !important;
+  flex: 0 0 22px;
   object-fit: contain;
   border-radius: 3px;
 }
