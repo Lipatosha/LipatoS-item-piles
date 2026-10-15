@@ -274,30 +274,38 @@ function lipExMakePane(state) {
 }
 
 function lipExCurrencyCode(label) {
-  const text = String(label || "").trim().toLowerCase();
-  if (["медь", "copper", "cp"].includes(text)) return "cp";
-  if (["серебро", "silver", "sp"].includes(text)) return "sp";
-  if (["золото", "gold", "gp"].includes(text)) return "gp";
+  const v = String(label || "").trim().toLowerCase();
+  if (v === "cp" || v === "copper" || v === "dnd5e.currencycp" || v.startsWith("мед")) return "cp";
+  if (v === "sp" || v === "silver" || v === "dnd5e.currencysp" || v.startsWith("серебр")) return "sp";
+  if (v === "gp" || v === "gold" || v === "dnd5e.currencygp" || v.startsWith("золот")) return "gp";
+  return null;
+}
+function lipExCurrencyCodeByIcon(src) {
+  const value = String(src || "").toLowerCase();
+  if (["/copper.png", "/copper.webp", "/copper-v2.webp", "coin-engraved-waves-copper.webp"].some(x => value.includes(x))) return "cp";
+  if (["/silver.png", "/silver.webp", "coin-engraved-moon-silver.webp"].some(x => value.includes(x))) return "sp";
+  if (["/gold.png", "/gold.webp", "coin-embossed-crown-gold.webp"].some(x => value.includes(x))) return "gp";
   return null;
 }
 function lipExMerchantCoinIcons(app) {
   const root = lipExRoot(app);
-  if (!root) return;
-  for (const entry of root.querySelectorAll(".item-pile-merchant-content .item-piles-currency-list [data-fast-tooltip]")) {
+  const content = root?.querySelector(".item-pile-merchant-content");
+  if (!content) return;
+  for (const entry of content.querySelectorAll("[data-fast-tooltip]")) {
     const img = entry.querySelector("img.item-piles-img");
-    const code = lipExCurrencyCode(entry.dataset.fastTooltip);
-    if (!img || !code) continue;
-    const newPath = lipExCoinIcon(code);
-    if (img.getAttribute("src") !== newPath) img.setAttribute("src", newPath);
+    if (!img) continue;
+    const code = lipExCurrencyCode(entry.dataset.fastTooltip) || lipExCurrencyCodeByIcon(img.getAttribute("src"));
+    if (!code) continue;
+    const art = lipExCoinIcon(code);
+    if (img.getAttribute("src") !== art) img.setAttribute("src", art);
     img.classList.add("lipatos-merchant-coin-icon");
     img.closest(".item-piles-img-container")?.classList.add("lipatos-merchant-coin-holder");
   }
-  for (const img of root.querySelectorAll(".item-pile-merchant-content img[src*='/trade-currency/']")) {
-    const path = (img.getAttribute("src") || "").toLowerCase();
-    const code = path.includes("copper") ? "cp" : path.includes("silver") ? "sp" : path.includes("gold") ? "gp" : null;
+  for (const img of content.querySelectorAll("img")) {
+    const code = lipExCurrencyCodeByIcon(img.getAttribute("src"));
     if (!code) continue;
-    const newPath = lipExCoinIcon(code);
-    if (img.getAttribute("src") !== newPath) img.setAttribute("src", newPath);
+    const art = lipExCoinIcon(code);
+    if (img.getAttribute("src") !== art) img.setAttribute("src", art);
     img.classList.add("lipatos-merchant-coin-icon");
     img.closest(".item-piles-img-container")?.classList.add("lipatos-merchant-coin-holder");
   }
