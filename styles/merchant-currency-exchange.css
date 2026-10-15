@@ -326,3 +326,10 @@
   font-weight: 700;
   white-space: nowrap;
 }
+
+/* 3.3.9 — right-aligned currency exchange tab (5px from right edge). */
+.item-piles-merchant-sheet nav.tabs .lipatos-exchange-tab {
+  margin-left: auto !important;
+  margin-right: 5px !important;
+  flex: 0 0 auto !important;
+}
