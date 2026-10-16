@@ -1,0 +1,43 @@
+name: Release LipatoS Item Piles v3.3.11
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/release-v3.3.11.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compiled bundle and merchant pricing regression
+        run: |
+          node --check dist/item-piles.js
+          node --check scripts/merchant-currency-exchange.js
+          node --check scripts/merchant-item-tooltips.js
+          node --check scripts/merchant-trade-dialog.js
+          node --check scripts/merchant-unit-prices.js
+          node tests/console-warnings.cjs
+          node tests/merchant-unit-prices.cjs
+      - name: Package the complete Item Piles module
+        run: |
+          zip -q -r lipatos-item-piles-v3.3.11.zip module.json dist scripts styles icons templates languages LICENSE README.md CHANGELOG.md
+          unzip -t lipatos-item-piles-v3.3.11.zip
+          unzip -l lipatos-item-piles-v3.3.11.zip | grep -F scripts/merchant-unit-prices.js
+      - name: Publish v3.3.11 release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view v3.3.11 >/dev/null 2>&1; then
+            gh release upload v3.3.11 lipatos-item-piles-v3.3.11.zip module.json --clobber
+          else
+            gh release create v3.3.11 lipatos-item-piles-v3.3.11.zip module.json \
+              --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" --latest \
+              --title "LipatoS — Item Piles v3.3.11" \
+              --notes "Товары торговцев оцениваются поштучно. Старые стопки нормализуются при входе ГМа; цена и запас каждого предмета сохраняются."
+          fi
