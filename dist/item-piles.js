@@ -35636,6 +35636,20 @@ function getCostOfItem(item, defaultCurrencies = false) {
   if (!defaultCurrencies) {
     defaultCurrencies = getCurrencyList().filter((currency) => !currency.secondary);
   }
+  // LipatoS D&D5e: system.price.value is the UNIT price in its denomination.
+  // Do not interpret 6 cp (0.06 gp) as 6 gp when the optional D&D5e
+  // integration has not loaded or a prior world setting is stale.
+  // The trade engine multiplies this amount by the PURCHASE quantity later.
+  if (game.system?.id === "dnd5e") {
+    const value = Number(foundry.utils.getProperty(item, "system.price.value"));
+    const denomination = String(
+      foundry.utils.getProperty(item, "system.price.denomination") ?? "gp"
+    ).toLowerCase().trim();
+    const standardRates = { cp: 0.01, sp: 0.1, ep: 0.5, gp: 1, pp: 10 };
+    if (Number.isFinite(value) && Object.prototype.hasOwnProperty.call(standardRates, denomination)) {
+      return Math.max(0, value * standardRates[denomination]);
+    }
+  }
   let overallCost = 0;
   let itemCost = getItemCost(item);
   if (SYSTEMS.DATA.ITEM_COST_TRANSFORMER) {
