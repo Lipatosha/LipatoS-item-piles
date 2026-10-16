@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Validate compiled bundle and merchant pricing regression
+      - name: Validate Foundry v14 bundle and merchant per-unit regression
         run: |
           node --check dist/item-piles.js
           node --check scripts/merchant-currency-exchange.js
