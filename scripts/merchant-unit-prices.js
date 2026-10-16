@@ -51,7 +51,7 @@ async function lipUnitNormalizeMerchant(actor) {
       .map(item => ({ _id: item.id, [LIP_UNIT_FLAG]: 1 }));
     if (!updates.length) return;
     await actor.updateEmbeddedDocuments("Item", updates, { lipatosMerchantUnitPricing: true });
-    console.info(`LipatoS Item Piles | ${actor.name}: poштучные цены восстановлены у ${updates.length} товаров.`);
+    console.info(`LipatoS Item Piles | ${actor.name}: поштучные цены восстановлены у ${updates.length} товаров.`);
   } catch (error) {
     console.error(`LipatoS Item Piles | Не удалось исправить цены торговца ${actor.name}`, error);
   } finally {
