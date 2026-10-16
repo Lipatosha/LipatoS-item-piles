@@ -8,6 +8,6 @@ assert.ok(!js.includes("if (Tour.tourInProgress) return;"),
 assert.ok(!js.includes("sourceMappingURL=item-piles.js.map"),
   "Should not reference missing source map in the compiled bundle");
 const manifest=JSON.parse(fs.readFileSync("module.json","utf8"));
-assert.equal(manifest.version,"3.3.11");
+assert.equal(manifest.version,"3.3.12");
 assert.ok(manifest.esmodules.includes("dist/item-piles.js"));
 console.log("Item Piles: v14 Tour and missing source map checks passed.");
